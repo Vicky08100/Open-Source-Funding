@@ -59,7 +59,7 @@
                 (target-funding-amount uint))
     (let ((new-project-identifier (+ (var-get next-project-identifier) u1)))
         (asserts! (> target-funding-amount u0) ERR-INVALID-FUNDING-AMOUNT)
-        (try! (map-insert open-source-projects
+        (map-insert open-source-projects
             { project-identifier: new-project-identifier }
             {
                 project-creator: tx-sender,
@@ -70,7 +70,7 @@
                 project-status: "active",
                 project-creation-block: block-height
             }
-        ))
+        )
         (var-set next-project-identifier new-project-identifier)
         (ok new-project-identifier)
     )
@@ -86,7 +86,7 @@
     (let ((project-details (unwrap! (map-get? open-source-projects { project-identifier: project-identifier }) ERR-PROJECT-DOES-NOT-EXIST)))
         (asserts! (is-eq (get project-creator project-details) tx-sender) ERR-UNAUTHORIZED-ACCESS)
         (asserts! (>= (get target-funding-amount project-details) milestone-funding-amount) ERR-INVALID-FUNDING-AMOUNT)
-        (try! (map-insert project-development-milestones
+        (map-insert project-development-milestones
             { 
                 project-identifier: project-identifier,
                 milestone-identifier: u1
@@ -98,7 +98,7 @@
                 milestone-funding-amount: milestone-funding-amount,
                 milestone-status: "pending"
             }
-        ))
+        )
         (ok true)
     )
 )
@@ -131,8 +131,7 @@
             previous-contribution 
             (map-set project-funding-contributors
                 { project-identifier: project-identifier, funding-contributor: tx-sender }
-                { contribution-amount: (+ funding-amount 
-                    (default-to u0 (get contribution-amount previous-contribution))) }
+                { contribution-amount: (+ funding-amount (get contribution-amount previous-contribution)) }
             )
             (map-insert project-funding-contributors
                 { project-identifier: project-identifier, funding-contributor: tx-sender }
